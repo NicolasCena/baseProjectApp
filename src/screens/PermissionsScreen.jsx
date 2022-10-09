@@ -1,35 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Platform, Button } from 'react-native';
-import { check, PERMISSIONS, request } from 'react-native-permissions';
 import { useSelector, useDispatch } from 'react-redux';
-import { askLocationPermission, checkLocationPermission } from '../context/permissionsSlice';
+import {  askLocationPermission, checkLocationPermission, changeControl } from '../context/permissionsSlice';
+import { check, PERMISSIONS, request, openSettings } from 'react-native-permissions';
 
 export const PermissionsScreen = () => {
 
-  const ete = useSelector((state) => state)
-  console.log(ete)
+  const [ flag, setFlag ]= useState(true)
 
-  const checkLocationPermission = async () => {
-
-    let permissionStatus;
-
-    if(Platform.OS === 'ios'){
-      permissionStatus = await request( PERMISSIONS.IOS.LOCATION_WHEN_IN_USE )
-    }else {
-      permissionStatus = await request( PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION )
-    }
-    console.log({ permissionStatus })
-
-  };
+  const state = useSelector((state) => state.permissions);
+  const dispatch = useDispatch()
 
   return (
     <View style={ style.container }>
       <Text style={ style.colorText }>PermissionsScreen</Text>
 
       <Button 
-        title='Permiso'
-        onPress={ checkLocationPermission}
+        title='Checkeo'
+        onPress={ () => dispatch(checkLocationPermission()) }
       />
+
+      <Button 
+        title='Status' 
+        onPress={ () => dispatch(askLocationPermission()) }
+      />
+
+    <Button 
+        title='Preguntar'
+        onPress={ () => {dispatch(changeControl(flag)), setFlag(!flag)} }
+      />
+
+      <Text>
+        { JSON.stringify( state, null, 2 )}
+      </Text>
 
     </View>
   )
