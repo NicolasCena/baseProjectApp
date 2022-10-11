@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { check, PERMISSIONS, PermissionStatus, request, openSettings } from 'react-native-permissions';
-
+import { check, PERMISSIONS, request, openSettings } from 'react-native-permissions';
+import { Platform } from 'react-native';
 
 const initialState = {
   locationStatus: 'Unvailable',
   control: true
 };
+
 
 export const askLocationPermission = createAsyncThunk('context/askLocationPermission', async() => {
     let permissionStatus;
@@ -15,7 +16,7 @@ export const askLocationPermission = createAsyncThunk('context/askLocationPermis
       } else {
         permissionStatus = await request( PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION );
       };
-
+      
     return permissionStatus
 })
 

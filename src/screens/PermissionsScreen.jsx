@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Platform, Button } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import {  askLocationPermission, checkLocationPermission, changeControl } from '../context/permissionsSlice';
-import { check, PERMISSIONS, request, openSettings } from 'react-native-permissions';
 
 export const PermissionsScreen = () => {
 
