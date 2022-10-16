@@ -14,24 +14,24 @@ export const Maps = () => {
         return <LoadingScreen />
     };
 
-    const centerPosition = async () => {
+    const centerPosition = async() => {
 
         const { latitude, longitude } = await getCurrentLocation();
-
-        mapViewRef.current?.animateCamera({
-            center: { latitude, longitude },
-        })
+        
+        mapViewRef.current.animateCamera({
+            center: { latitude, longitude }
+        });
     }
 
   return (
     <>
         <MapView
             ref={ (el) => mapViewRef.current = el }
-            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+            // provider={PROVIDER_GOOGLE} // remove if not using Google Maps
             style={styles.map}
             region={{
             latitude: initialPosition.latitude,
-            longitude: initialPosition.longitud,
+            longitude: initialPosition.longitude,
             latitudeDelta: 0.015,
             longitudeDelta: 0.0121,
             }}
@@ -59,6 +59,17 @@ export const Maps = () => {
                 bottom: 20,
                 right: 20,
                 left: 15
+            }}
+        />
+
+
+        <Fab 
+            iconName="brush-outline"
+            onPress={ () => setShowPolyline( !showPolyline ) }
+            style={{
+                position: 'absolute',
+                bottom: 80,
+                right: 20
             }}
         />
     </>
