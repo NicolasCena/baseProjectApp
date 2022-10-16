@@ -24,10 +24,10 @@ export const PermissionsScreen = () => {
         onPress={ () => dispatch(askLocationPermission()) }
       />
 
-    <Button 
+    {/* <Button 
         title='Preguntar'
         onPress={ () => {dispatch(changeControl(flag)), setFlag(!flag)} }
-      />
+      /> */}
 
       <Text>
         { JSON.stringify( state, null, 2 )}

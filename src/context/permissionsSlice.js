@@ -3,7 +3,7 @@ import { check, PERMISSIONS, request, openSettings } from 'react-native-permissi
 import { Platform } from 'react-native';
 
 const initialState = {
-  locationStatus: 'Unvailable',
+  locationStatus: 'unavailable',
   control: true
 };
 
@@ -29,9 +29,9 @@ export const checkLocationPermission = createAsyncThunk('context/checkLocationPe
       permissionStatus = await check( PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION );
     };
 
-    if ( permissionStatus === 'blocked' ) {
+    if( permissionStatus === 'blocked' || permissionStatus === 'denied'){
       openSettings();
-    };
+    }
 
     return permissionStatus
   });

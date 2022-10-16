@@ -1,10 +1,20 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, StyleSheet } from 'react-native'
+import { Maps } from '../components/Maps';
+
 
 export const MapScreen = () => {
+
   return (
-    <View>
-      <Text>MapScreen</Text>
+    <View style={styles.container}>
+      <Maps />
     </View>
   )
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+ });
