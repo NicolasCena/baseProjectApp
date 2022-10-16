@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { useState, useEffect, useRef } from 'react'
+import MapView, { Marker, Polyline } from 'react-native-maps';
 import { StyleSheet } from 'react-native'
 import { useLocation } from '../hooks/useLocation';
 import { LoadingScreen } from '../screens/LoadingScreen';
@@ -7,21 +7,52 @@ import { Fab } from './Fab';
 
 export const Maps = () => {
 
-    const { hasLocation, initialPosition, getCurrentLocation } = useLocation();
-    const mapViewRef = useRef();
-    
-    if(!hasLocation){
-        return <LoadingScreen />
-    };
+    const [ showPolyline, setShowPolyline ] = useState(true);
 
+    const { hasLocation,
+        initialPosition,
+        getCurrentLocation,
+        followUserLocation,
+        userLocation,
+        stopFollowUserLocation,
+        routeLines } = useLocation();
+
+    const mapViewRef = useRef();
+    const following  = useRef(true);
+
+    // Actualizamos el seguimiento al usuario
+    useEffect(() => {
+        followUserLocation();
+        return () => {
+            stopFollowUserLocation();
+        }
+    }, [])
+
+    useEffect(() => {
+
+        if( !following.current ) return;
+
+        const { latitude, longitude } = userLocation;
+        mapViewRef.current?.animateCamera({
+            center: { latitude, longitude }
+        });
+    }, [ userLocation ])
+    
+
+    // Funcion para llevar al usuario al centro de su ubicacion
     const centerPosition = async() => {
 
         const { latitude, longitude } = await getCurrentLocation();
         
-        mapViewRef.current.animateCamera({
+        following.current = true;
+
+        mapViewRef.current?.animateCamera({
             center: { latitude, longitude }
         });
     }
+    if(!hasLocation){
+        return <LoadingScreen />
+    };
 
   return (
     <>
@@ -37,6 +68,16 @@ export const Maps = () => {
             }}
             showsUserLocation={true}
         >
+
+            {
+                showPolyline && (
+                    <Polyline 
+                        coordinates={ routeLines }
+                        strokeColor="black"
+                        strokeWidth={ 3 }
+                    />
+                )
+            }
 
             {/* Permite añadirle caracteristicas al icono del usuario y su seguimiento */}
             {/* <Marker 
@@ -57,24 +98,22 @@ export const Maps = () => {
             style={{
                 position:'absolute',
                 bottom: 20,
-                right: 20,
                 left: 15
             }}
         />
-
 
         <Fab 
             iconName="brush-outline"
             onPress={ () => setShowPolyline( !showPolyline ) }
             style={{
                 position: 'absolute',
-                bottom: 80,
+                bottom: 20,
                 right: 20
             }}
         />
     </>
   )
-}
+} 
 
 const styles = StyleSheet.create({
     map: {
